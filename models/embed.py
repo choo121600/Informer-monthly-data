@@ -74,13 +74,13 @@ class TemporalEmbedding(nn.Module):
     def forward(self, x):
         x = x.long()
         
-        minute_x = self.minute_embed(x[:,:,4]) if hasattr(self, 'minute_embed') else 0.
-        hour_x = self.hour_embed(x[:,:,3])
-        weekday_x = self.weekday_embed(x[:,:,2])
-        day_x = self.day_embed(x[:,:,1])
+        # minute_x = self.minute_embed(x[:,:,4]) if hasattr(self, 'minute_embed') else 0.
+        # hour_x = self.hour_embed(x[:,:,3])
+        # weekday_x = self.weekday_embed(x[:,:,2])
+        # day_x = self.day_embed(x[:,:,1])
         month_x = self.month_embed(x[:,:,0])
         
-        return hour_x + weekday_x + day_x + month_x + minute_x
+        return month_x
 
 class TimeFeatureEmbedding(nn.Module):
     def __init__(self, d_model, embed_type='timeF', freq='h'):
