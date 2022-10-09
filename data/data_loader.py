@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 class Dataset_KOGAS_month(Dataset):
     def __init__(self, root_path, flag='train', size=None, features='M', data_path='MergedKogas.csv', 
-                target='도시가스(톤)_총합(민수용+산업용)', scale=True, inverse=False, timeenc=0, freq='m', cols=None):
+                target='value', scale=True, inverse=False, timeenc=0, freq='m', cols=None):
         # size [seq_len, label_len, pred_len]
         # info
         if size == None:
@@ -46,10 +46,10 @@ class Dataset_KOGAS_month(Dataset):
         self.scaler = StandardScaler()
         df_raw = pd.read_csv(os.path.join(self.root_path, self.data_path))
 
-        border1s = [0, 12*5 - self.seq_len, 12*5+4*5 - self.seq_len]
-        border2s = [12*5, 12*5+4*5, 12*5+8*5]
-        border1 = border1s[self.set_type]
-        border2 = border2s[self.set_type]
+        # border1s = [0, 12*5 - self.seq_len, 12*5+4*5 - self.seq_len]
+        # border2s = [12*5, 12*5+4*5, 12*5+8*5]
+        border1 = len(df_raw)-self.seq_len
+        border2 = len(df_raw)
 
         if self.features=='M' or self.features=='MS':
             cols_data = df_raw.columns[1:]
@@ -58,8 +58,7 @@ class Dataset_KOGAS_month(Dataset):
             df_data = df_raw[[self.target]]
 
         if self.scale:
-            train_data = df_data[border1s[0]:border2s[0]]
-            self.scaler.fit(train_data.values)
+            self.scaler.fit(df_data.values)
             data = self.scaler.transform(df_data.values)
         else:
             data = df_data.values
@@ -100,7 +99,7 @@ class Dataset_KOGAS_month(Dataset):
 
 class Dataset_Pred(Dataset):
     def __init__(self, root_path, flag='pred', size=None, features='M', data_path='MergedKogas.csv', 
-                target='도시가스(톤)_총합(민수용+산업용)', scale=True, inverse=False, timeenc=0, freq='m', cols=None):
+                target='value', scale=True, inverse=False, timeenc=0, freq='m', cols=None):
         # size [seq_len, label_len, pred_len]
         # info
         if size == None:
