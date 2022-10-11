@@ -16,15 +16,9 @@ class Dataset_KOGAS_month(Dataset):
     def __init__(self, root_path, flag='train', size=None, features='M', data_path='MergedKogas.csv', 
                 target='value', scale=True, inverse=False, timeenc=0, freq='m', cols=None):
         # size [seq_len, label_len, pred_len]
-        # info
-        if size == None:
-            self.seq_len = 24*4*4
-            self.label_len = 24*4
-            self.pred_len = 24*4
-        else:
-            self.seq_len = size[0]
-            self.label_len = size[1]
-            self.pred_len = size[2]
+        self.seq_len = size[0]
+        self.label_len = size[1]
+        self.pred_len = size[2]
 
         # init
         assert flag in ['train', 'val', 'test']
@@ -46,8 +40,6 @@ class Dataset_KOGAS_month(Dataset):
         self.scaler = StandardScaler()
         df_raw = pd.read_csv(os.path.join(self.root_path, self.data_path))
 
-        # border1s = [0, 12*5 - self.seq_len, 12*5+4*5 - self.seq_len]
-        # border2s = [12*5, 12*5+4*5, 12*5+8*5]
         border1 = len(df_raw)-self.seq_len
         border2 = len(df_raw)
 
